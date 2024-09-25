@@ -31,17 +31,11 @@ export default function App() {
   }
 
   function handleAddFriend(friend) {
-    // Azért nem friends.push mert úgy a meglévő Arrayt változtatom meg ez Reactba nem jó nem is biztos hogy renderelni fogja, ezért az alább látható módon kell létrehozni ami egy új array-al tér vissza így renderelni fogja
     setFriends((friends) => [...friends, friend]);
     setShowAddFriend(false);
   }
 
   function handleSelection(friend) {
-    // setSelectedFriend(friend);
-    // console.log(friend);
-
-    //// - Akkor kell megadni a (cur) paramétert ha a State az előző State állapotától függ, a (cur) paraméterben megadott érték mindig a State változó állapotban lévő értéke.
-    //// - Azért kell a cur?. mert a cur null is lehet ha nincs semmi kiválasztva ilyenkor nincs .id propertyje és hibára futna. A ?. hatására ha null érték akkor undefinedel tér vissza és vissza tud adni False értéket.
     setSelectedFriend((cur) => (cur?.id === friend.id ? null : friend));
     setShowAddFriend(false);
   }
@@ -94,8 +88,6 @@ function Button({ children, onClick }) {
 }
 
 function FriendsList({ friends, onSelection, selectedFriend }) {
-  //// Átkerül State-be az appba, hogy fellehesen többet is venni
-  // const friends = initialFriends;
   return (
     <ul>
       {friends.map((friend) => (
@@ -141,7 +133,7 @@ function FormAddFriend({ onAddFriend }) {
   const [image, setImage] = useState("https://i.pravatar.cc/48");
 
   function handleSubmit(e) {
-    e.preventDefault(); //Ha nem írjuk be akkor újratölti az egész oldalt (Felvillan)
+    e.preventDefault();
 
     if (!name || !image) return;
 
@@ -213,14 +205,13 @@ function FormSplitBill({ selectedFriend, onSplitBill }) {
         value={paidByUser}
         onChange={(e) =>
           setPaidByUser(
-            // Nem enged nagyobb számot írni az Inputba ha a beírt összeg nagyobb lenne mint az összes fizetendő (Bill)
             Number(e.target.value) > bill ? paidByUser : Number(e.target.value)
           )
         }
       />
 
       <label>📱 {selectedFriend.name} expense</label>
-      <input type="text" disabled value={paidByFriend} />
+      <input type="number" disabled value={paidByFriend} />
 
       <label>❓ Who is paying the bill</label>
       <select
